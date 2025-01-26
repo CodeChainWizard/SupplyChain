@@ -1,8 +1,10 @@
 import React from "react";
 
 interface TabsProps {
-  activeTab: "create" | "list";
-  setActiveTab: React.Dispatch<React.SetStateAction<"create" | "list">>;
+  activeTab: "create" | "list" | "analysis";
+  setActiveTab: React.Dispatch<
+    React.SetStateAction<"create" | "list" | "analysis">
+  >;
 }
 
 const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab }) => {
@@ -23,6 +25,14 @@ const Tabs: React.FC<TabsProps> = ({ activeTab, setActiveTab }) => {
         } font-semibold px-4 py-2`}
       >
         List All Products
+      </button>
+      <button
+        onClick={() => setActiveTab("analysis")}
+        className={`${
+          activeTab === "analysis" ? "text-blue-600" : "text-gray-600"
+        } font-semibold px-4 py-2`}
+      >
+        Analysis
       </button>
     </div>
   );
