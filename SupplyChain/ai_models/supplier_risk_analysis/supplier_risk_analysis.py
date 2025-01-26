@@ -14,7 +14,7 @@ def train_supplier_risk_model(data_path):
     data = pd.read_csv(data_path)
 
     # Handle missing values (forward fill)
-    data.fillna(method="ffill", inplace=True)
+    data.ffill(inplace=True)  # Use ffill() instead of fillna(method="ffill")
 
     # Features (assuming the dataset has columns for delivery_time, quality_score, complaints_history)
     X = data[['delivery_time', 'quality_score', 'complaints_history']]
@@ -39,11 +39,20 @@ def train_supplier_risk_model(data_path):
     print(classification_report(y_test, y_pred))
 
     # Save the model
-    joblib.dump(model, 'supplier_risk_model.pkl')
-    print("Model saved as 'supplier_risk_model.pkl'")
+    model_filename = 'supplier_risk_model.pkl'
+    joblib.dump(model, model_filename)
+    print(f"Model saved as '{model_filename}'")
 
-    return model
+    # Optionally return accuracy and classification report as well
+    report = classification_report(y_test, y_pred)
+    
+    return model, accuracy, report
 
 if __name__ == "__main__":
     # Specify the correct path to the supplier data CSV
-    model = train_supplier_risk_model("/Users/yashcomputers/Desktop/Blockchain project/SupplyChain/supply_chain/SupplyChain/data/supplier_data/supplier_data.csv")
+    model, accuracy, report = train_supplier_risk_model(
+        "/Users/yashcomputers/Desktop/Blockchain project/SupplyChain/supply_chain/SupplyChain/data/supplier_data/supplier_data.csv"
+    )
+    print(f"Model Accuracy: {accuracy}")
+    print("Classification Report:")
+    print(report)

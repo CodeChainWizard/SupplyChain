@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { createProduct } from "@/lib/supplyChain";
+import { createProduct } from "@/lib/supplyChain"; // Import your blockchain product creation logic
 
 interface CreateProductProps {
   setFormdata: React.Dispatch<
@@ -15,6 +15,18 @@ const CreateProduct: React.FC<CreateProductProps> = ({ setFormdata }) => {
     setFormData({ ...formdata, [e.target.name]: e.target.value });
   };
 
+  const generateRandomLocationId = () => {
+    return Math.floor(1000 + Math.random() * 900000);
+  };
+
+  const generateRandomDemand = () => {
+    return Math.floor(1000 + Math.random() * 9000);
+  };
+
+  const generateRandomPrice = () => {
+    return (Math.random() * (500 - 10) + 10).toFixed(2);
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -23,16 +35,52 @@ const CreateProduct: React.FC<CreateProductProps> = ({ setFormdata }) => {
 
     try {
       const tx = await createProduct(generateNumber, formdata.name);
-      setFormdata({
-        id: "",
-        name: "",
+
+      // const productData = {
+      //   product_id: generateNumber,
+      //   name: formdata.name,
+      //   date: new Date().toISOString().split("T")[0],
+      //   location_id: 654321,
+      //   demand: 10000,
+      //   price: 100.0,
+      // };
+
+      const productData = {
+        product_id: generateNumber,
+        name: formdata.name,
+        date: new Date().toISOString().split("T")[0],
+        location_id: generateRandomLocationId(),
+        demand: generateRandomDemand(),
+        price: generateRandomPrice(),
+      };
+
+      // Call the API to save the product data in the CSV file
+      const response = await fetch("/api/addProduct", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(productData),
       });
 
-      console.log("Form Data: ", { id: generateNumber, name: formdata.name });
+      const data = await response.json();
 
-      alert("Create New Product is Successfully");
+      if (response.ok) {
+        setFormdata({
+          id: "",
+          name: "",
+        });
+
+        console.log("Form Data: ", { id: generateNumber, name: formdata.name });
+        alert("Product created and added to CSV successfully!");
+        return tx;
+      } else {
+        console.error("Failed to add product to CSV:", data.error);
+        alert("Error adding product to CSV.");
+      }
     } catch (error) {
-      console.error("Error while Create new Product: ", error);
+      console.error("Error while creating new product:", error);
+      alert("Error creating product.");
     }
   };
 

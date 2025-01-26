@@ -42,9 +42,33 @@ export default function Analysis() {
     }
   };
 
-  // Function to render the model output in a table
+  const handleRiskTrainModel = async () => {
+    setIsLoading(true);
+    setModelOutput(null);
+    setError(null);
+
+    try {
+      const response = await axios.post("/api/Risk_trainModel", {
+        dataPath:
+          "/Users/yashcomputers/Desktop/Blockchain project/SupplyChain/supply_chain/SupplyChain/data/supplier_data/supplier_data.csv",
+      });
+
+      setModelOutput(response.data.output);
+    } catch (error: any) {
+      console.log(
+        "Error while running the RiskModel train in Analysis.tsx file"
+      );
+      console.error(
+        "Response error:",
+        error.response ? error.response.data : error.message
+      );
+      setError("Error occurred during training. Please check the server logs.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const renderTable = (data: string) => {
-    // Assuming modelOutput is a CSV or tabular data string
     const rows = data.split("\n");
     const headers = rows[0].split(",");
     const tableData = rows.slice(1).map((row) => row.split(","));
@@ -79,7 +103,6 @@ export default function Analysis() {
     <div className="text-center p-8">
       <h1 className="text-3xl font-bold mb-6">Demand Forecasting Model</h1>
 
-      {/* Display the Train Model button */}
       <button
         onClick={handleTrainModel}
         disabled={isLoading}
@@ -88,6 +111,16 @@ export default function Analysis() {
         } transition-colors`}
       >
         {isLoading ? "Training..." : "Train Model"}
+      </button>
+
+      <button
+        onClick={handleRiskTrainModel}
+        disabled={isLoading}
+        className={`ml-2 px-6 py-2 text-lg cursor-pointer mb-5 rounded-lg mt-2 ${
+          isLoading ? "bg-gray-400" : "bg-red-500 hover:bg-red-700"
+        } transition-colors`}
+      >
+        {isLoading ? "Training..." : "Risk Analysis"}
       </button>
 
       {isLoading && (

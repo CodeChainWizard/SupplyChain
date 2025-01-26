@@ -96,6 +96,8 @@ const ProductList: React.FC = () => {
     new Set()
   );
   const [newOwer, setNewOwer] = useState<Map<number, string>>(new Map());
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 5;
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -217,6 +219,17 @@ const ProductList: React.FC = () => {
     }
   };
 
+  // Paginate products
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = products.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+
+  // Change page
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
   return (
     <div>
       <h2 className="text-xl font-semibold text-center text-gray-600 mb-4">
@@ -227,7 +240,7 @@ const ProductList: React.FC = () => {
         <p className="text-center text-gray-600">Loading products...</p>
       ) : error ? (
         <p className="text-center text-red-600">{error}</p>
-      ) : products.length > 0 ? (
+      ) : currentProducts.length > 0 ? (
         <table className="w-full table-auto border-collapse border border-gray-200">
           <thead>
             <tr className="bg-gray-100">
@@ -237,7 +250,7 @@ const ProductList: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {products.map((product) => (
+            {currentProducts.map((product) => (
               <tr key={product.id}>
                 <td className="border border-gray-300 px-4 py-2 text-center">
                   {product.id}
@@ -288,6 +301,25 @@ const ProductList: React.FC = () => {
       ) : (
         <p className="text-center text-gray-600">No products available.</p>
       )}
+
+      {/* Pagination Controls */}
+      <div className="flex justify-center mt-4">
+        {Array.from({
+          length: Math.ceil(products.length / productsPerPage),
+        }).map((_, index) => (
+          <button
+            key={index + 1}
+            className={`mx-1 px-3 py-2 rounded-lg ${
+              currentPage === index + 1
+                ? "bg-blue-500 text-white"
+                : "bg-gray-300"
+            }`}
+            onClick={() => paginate(index + 1)}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
 
       {selectedProduct !== null && (
         <ProductTransferPopup
