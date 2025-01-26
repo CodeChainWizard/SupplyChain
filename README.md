@@ -1,5 +1,7 @@
 # SupplyChain Project
 
+![SupplyChain Banner](public/images/createProduct.png)
+
 The SupplyChain Project is an innovative solution for supply chain management, integrating blockchain technology with AI-driven analytics. It enhances transparency, optimizes efficiency, and proactively manages risk across the supply chain ecosystem.
 
 ## Table of Contents
@@ -34,6 +36,14 @@ The repository is structured as follows:
 - **`test/`**: Contains test cases to ensure the reliability and functionality of the system.
 - **`ai_models/`**: Contains AI models for demand forecasting and supplier risk analysis.
 - **`data/`**: Holds datasets used for training, testing, and evaluation of AI models.
+
+### **Supplier Risk Analysis**
+
+- AI-driven analysis to assess supplier reliability.
+- Early detection of potential risks in the supply chain.
+
+![Risk Analysis](public/images/AnalysisTheSupplyChain.png)
+![Risk Score Output](public/images/Model.png)
 
 ## Installation
 
