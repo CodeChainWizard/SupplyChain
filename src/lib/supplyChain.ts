@@ -3,10 +3,12 @@ import contractABI from "../artifacts/contract.json";
 
 // const provide = new ethers.providers.JsonRpcBatchProvider(
 //   process.env.NEXT_PUBLIC_ETHEREUM_RPC_URL ||
-//     ""
+//     "https://polygon-amoy.g.alchemy.com/v2/NO4ztLfeI0yv226QY4_hL7kSYgglHRn8"
 // );
 
-const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || "";
+const contractAddress =
+  process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ||
+  "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
 if (!contractAddress) {
   throw new Error("Contract Address is not defined");

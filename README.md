@@ -1,40 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# SupplyChain Project
 
-## Getting Started
+The SupplyChain Project is an innovative solution for supply chain management, integrating blockchain technology with AI-driven analytics. It enhances transparency, optimizes efficiency, and proactively manages risk across the supply chain ecosystem.
 
-First, run the development server:
+## Table of Contents
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- [Introduction](#introduction)
+- [Features](#features)
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Introduction
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+This project seeks to transform traditional supply chain operations through the power of blockchain and artificial intelligence (AI). By combining the immutable and decentralized features of blockchain with AI capabilities for demand forecasting and supplier risk analysis, this system delivers a secure, efficient, and transparent supply chain management platform.
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Features
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+- **Blockchain Integration**: Incorporates smart contracts to facilitate transparent, tamper-proof, and automated transactions.
+- **Demand Forecasting**: Uses machine learning models to accurately predict product demand, helping businesses optimize inventory levels.
+- **Supplier Risk Analysis**: Leverages AI models to analyze supplier data, assess risks, and ensure a resilient supply chain.
+- **User-Friendly Web Interface**: Provides a seamless and intuitive interface for managing supply chain activities and viewing analytics.
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project Structure
 
-## Learn More
+The repository is structured as follows:
 
-To learn more about Next.js, take a look at the following resources:
+- **`contracts/`**: Contains blockchain smart contracts for supply chain operations.
+- **`public/`**: Stores static assets like images and other public files.
+- **`scripts/`**: Includes automation and deployment scripts.
+- **`src/`**: Houses the main source code for the web application, including React components, pages, and styling.
+- **`test/`**: Contains test cases to ensure the reliability and functionality of the system.
+- **`ai_models/`**: Contains AI models for demand forecasting and supplier risk analysis.
+- **`data/`**: Holds datasets used for training, testing, and evaluation of AI models.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+## Installation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+To set up and run this project locally, follow the steps below:
 
-## Deploy on Vercel
+1. **Clone the Repository**:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   Open your terminal and run:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+   ```bash
+   git clone https://github.com/CodeChainWizard/SupplyChain.git
+   cd SupplyChain
+
+   ```
+
+2. **Install Dependencies:**:
+
+   Install the required Node.js dependencies by running::
+
+   ```bash
+   npm install
+
+   ```
+
+3. **Set Environment Variables:**
+
+   Create a .env file in the root directory and configure it based on the example provided in **`.env.example`**. This includes API keys, database credentials, or any other required configuration.
+
+4. **Start the Development Server:**
+   Launch the development server by executing:
+
+   ```bash
+   npm run dev
+
+   ```
