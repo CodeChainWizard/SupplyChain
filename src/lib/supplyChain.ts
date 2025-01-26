@@ -8,7 +8,7 @@ import contractABI from "../artifacts/contract.json";
 
 const contractAddress =
   process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ||
-  "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
+  "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
 if (!contractAddress) {
   throw new Error("Contract Address is not defined");
@@ -212,6 +212,45 @@ export const productTransfer = async (
         "Additional Info: Caller address does not match the current product owner."
       );
     }
+    throw error;
+  }
+};
+
+export const cancelProductTransfer = async (productId: number) => {
+  try {
+    const contract = await getContract();
+    if (!contract) {
+      console.error("Contract not found");
+      return;
+    }
+
+    const signer = await contract.signer.getAddress();
+    console.log("Caller (signer):", signer);
+
+    const product = await contract.products(productId);
+    console.log("Product Details:", product);
+
+    if (signer !== product.Owner) {
+      console.error("Only the current product owner can cancel the transfer.");
+      return;
+    }
+
+    // const gasLimit = await contract.estimateGas.cancelTransferProduct(
+    //   productId
+    // );
+
+    // Call contract to cancel transfer
+    const tx = await contract.cancelTransferProduct(productId, {
+      gasLimit: 500000,
+    });
+    console.log("Transaction sent:", tx);
+
+    const receipt = await tx.wait();
+    console.log("Transaction confirmed:", receipt);
+
+    return receipt;
+  } catch (error) {
+    console.error("Error in cancelProductTransfer:", error);
     throw error;
   }
 };

@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { getAllProducts, productTransfer } from "@/lib/supplyChain";
+import {
+  cancelProductTransfer,
+  getAllProducts,
+  productTransfer,
+} from "@/lib/supplyChain";
 import { BigNumber, ethers } from "ethers";
 
 import { Tooltip as ReactTooltip } from "react-tooltip";
@@ -91,7 +95,7 @@ const ProductList: React.FC = () => {
   const [transferredProducts, setTransferredProducts] = useState<Set<number>>(
     new Set()
   );
-  const [newOwer, setNewOwer] = useState("");
+  const [newOwer, setNewOwer] = useState<Map<number, string>>(new Map());
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -128,6 +132,11 @@ const ProductList: React.FC = () => {
     if (storedTransferredProducts) {
       setTransferredProducts(new Set(JSON.parse(storedTransferredProducts)));
     }
+
+    const storedNewOwners = localStorage.getItem("newOwer");
+    if (storedNewOwners) {
+      setNewOwer(new Map(JSON.parse(storedNewOwners)));
+    }
   }, []);
 
   const handleTransfer = async (
@@ -143,11 +152,17 @@ const ProductList: React.FC = () => {
     setLoading(true);
     try {
       const receipt = await productTransfer(productId, newOwner, details);
-      setNewOwer(newOwner);
+
+      setNewOwer((prev) => {
+        const update = new Map(prev);
+        update.set(productId, newOwner);
+        localStorage.setItem("newOwer", JSON.stringify(Array.from(update))); // Persist in localStorage
+        return update;
+      });
+
       alert("Product transferred successfully");
       console.log("Transaction receipt:", receipt);
 
-      // Update transferred products
       setTransferredProducts((prev) => {
         const updatedSet = new Set([...prev, productId]);
         localStorage.setItem(
@@ -161,6 +176,42 @@ const ProductList: React.FC = () => {
     } catch (error: any) {
       console.error("Error transferring product:", error);
       alert(`Failed to transfer product: ${error.reason || error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCancleTransferProduct = async (productId: number) => {
+    if (!productId) {
+      alert("Invalid Input");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const receipt = await cancelProductTransfer(productId);
+
+      setTransferredProducts((prev) => {
+        const update = new Set(prev);
+        update.delete(productId);
+        localStorage.setItem(
+          "transferredProducts",
+          JSON.stringify(Array.from(update))
+        );
+        return update;
+      });
+
+      setNewOwer((prev) => {
+        const updateMap = new Map(prev);
+        updateMap.delete(productId);
+        localStorage.setItem("newOwer", JSON.stringify(Array.from(updateMap))); // Update localStorage
+        return updateMap;
+      });
+
+      console.log("Transaction receipt: ", receipt);
+    } catch (error) {
+      console.error("Error while canceling product transfer:", error);
     } finally {
       setLoading(false);
     }
@@ -197,7 +248,7 @@ const ProductList: React.FC = () => {
 
                 <td className="border border-gray-300 px-4 py-2 text-center">
                   <button
-                    id={`tooltip-${product.id}`} // Assign a unique ID for the tooltip
+                    id={`tooltip-${product.id}`}
                     className={`p-2 border rounded-lg ${
                       transferredProducts.has(product.id)
                         ? "bg-gray-400 text-gray-700 cursor-not-allowed"
@@ -211,13 +262,21 @@ const ProductList: React.FC = () => {
                       : "Transfer"}
                   </button>
 
-                  {/* Tooltip Component */}
+                  {transferredProducts.has(product.id) ? (
+                    <button
+                      className="p-2 border rounded-lg mt-1"
+                      onClick={() => handleCancleTransferProduct(product.id)}
+                    >
+                      X
+                    </button>
+                  ) : null}
+
                   <ReactTooltip
-                    anchorId={`tooltip-${product.id}`} // Matches the button's ID
+                    anchorId={`tooltip-${product.id}`}
                     place="top"
                     content={
                       transferredProducts.has(product.id)
-                        ? `NewOwer: ${newOwer}`
+                        ? `New Owner: ${newOwer.get(product.id) || "N/A"}`
                         : "Click to transfer this product."
                     }
                   />
